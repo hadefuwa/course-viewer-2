@@ -1,24 +1,14 @@
+// Google Drive client — uses a simple API key, not a service account.
+// Requires the Drive folder to be shared as "Anyone with the link can view".
+// Create a key at console.cloud.google.com → APIs & Services → Credentials → API key
+// then restrict it to the Google Drive API.
 import { google } from 'googleapis'
 
-function getAuth() {
-  const raw = process.env.DRIVE_SA_KEY
-  if (!raw) throw new Error('DRIVE_SA_KEY environment variable is not set')
-  const creds = JSON.parse(raw)
-  if (!creds.client_email || !creds.private_key) {
-    throw new Error('DRIVE_SA_KEY is missing client_email or private_key')
-  }
-  return new google.auth.JWT({
-    email: creds.client_email,
-    key: creds.private_key,
-    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
-  })
-}
-
-export const drive = google.drive({ version: 'v3', auth: getAuth() })
-
+const apiKey = process.env.GOOGLE_API_KEY!
+export const drive = google.drive({ version: 'v3', auth: apiKey })
 export const ROOT_FOLDER_ID = process.env.DRIVE_ROOT_FOLDER_ID!
 
-// Fetch a file's raw bytes from Drive by file ID
+// Download a file from Drive by file ID (file must be publicly shared)
 export async function fetchFileBuffer(fileId: string): Promise<Buffer> {
   const res = await drive.files.get(
     { fileId, alt: 'media', supportsAllDrives: true },
@@ -27,7 +17,7 @@ export async function fetchFileBuffer(fileId: string): Promise<Buffer> {
   return Buffer.from(res.data as ArrayBuffer)
 }
 
-// List all Heading2 text values in a .docx file (for admin section picker)
+// List all Heading2 paragraphs in a publicly shared .docx file
 export async function listDocxHeadings(fileId: string): Promise<string[]> {
   const buf = await fetchFileBuffer(fileId)
   const JSZip = (await import('jszip')).default
@@ -45,4 +35,14 @@ export async function listDocxHeadings(fileId: string): Promise<string[]> {
     if (text) headings.push(text)
   }
   return headings
+}
+
+// List all files in a Drive folder (one level deep)
+export async function listFolderFiles(folderId: string) {
+  const res = await drive.files.list({
+    q: `'${folderId}' in parents and trashed=false`,
+    fields: 'files(id,name,mimeType,size)',
+    pageSize: 1000,
+  })
+  return res.data.files ?? []
 }
