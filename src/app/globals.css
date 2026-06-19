@@ -2,25 +2,64 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground: #0f172a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ── Document viewer (mammoth output) ─────────────────────────────────────
+   mammoth strips Word styles so we apply readable defaults here.        */
+.doc-content {
+  max-width: 72ch;
+  line-height: 1.75;
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+.doc-content h1 { font-size: 1.75rem; font-weight: 700; margin: 2rem 0 1rem; color: #0f172a; }
+.doc-content h2 { font-size: 1.4rem;  font-weight: 700; margin: 2rem 0 0.75rem; color: #0f172a; border-bottom: 2px solid #ede9fe; padding-bottom: 0.4rem; }
+.doc-content h3 { font-size: 1.1rem;  font-weight: 600; margin: 1.5rem 0 0.5rem; color: #3730a3; }
+.doc-content h4 { font-size: 1rem;    font-weight: 600; margin: 1rem 0 0.4rem; }
+
+.doc-content p  { margin: 0.75rem 0; }
+
+.doc-content ul { list-style: disc;    padding-left: 1.75rem; margin: 0.75rem 0; }
+.doc-content ol { list-style: decimal; padding-left: 1.75rem; margin: 0.75rem 0; }
+.doc-content li { margin: 0.3rem 0; }
+
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+}
+.doc-content th {
+  background: #f5f3ff;
+  color: #3730a3;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid #ddd6fe;
+}
+.doc-content td {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+.doc-content tr:nth-child(even) td { background: #fafafa; }
+
+.doc-content img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #e5e7eb;
+}
+
+.doc-content strong { font-weight: 600; }
+.doc-content em     { font-style: italic; }
+
+.doc-content a { color: #7c3aed; text-decoration: underline; }
+.doc-content a:hover { color: #5b21b6; }

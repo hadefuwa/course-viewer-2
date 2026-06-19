@@ -31,7 +31,7 @@ export async function GET(req: Request) {
   // Check Supabase Storage cache
   const { data: cached } = await supabase.storage.from(BUCKET).download(key)
   if (cached) {
-    const buf = Buffer.from(await cached.arrayBuffer())
+    const buf = await cached.arrayBuffer()
     return new NextResponse(buf, {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -63,7 +63,7 @@ export async function GET(req: Request) {
     upsert: true,
   })
 
-  return new NextResponse(buf, {
+  return new NextResponse(new Blob([new Uint8Array(buf)]), {
     headers: {
       'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'Cache-Control': 'public, max-age=3600',
