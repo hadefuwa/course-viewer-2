@@ -139,6 +139,71 @@ export default function HowItWorksPage() {
           <Callout>
             <strong>Why this matters for updating content:</strong> if you fix a typo in a Word doc or swap a slide in a PowerPoint, just replace the file in Google Drive. The next learner to open that screen gets the updated version. There is no separate &ldquo;republish&rdquo; step and no HTML file to regenerate.
           </Callout>
+
+          <h3 style={{ fontWeight: 700, color: 'var(--primary-dark)', fontSize: '1rem', margin: '1.75rem 0 0.75rem' }}>
+            Reusing the same file across multiple courses
+          </h3>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+            Because the definition file is just a <em>pointer</em> to a file — not a copy of it — the same worksheet can appear in as many courses as you like, at any position, with no duplication.
+          </p>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+            For example, CP4807-3.docx (a microcontroller worksheet) lives once in Google Drive. Two completely different courses can both use it:
+          </p>
+
+          {/* Reuse diagram */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+            {/* Course A */}
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+              <div style={{ background: 'var(--primary-dark)', color: '#fff', padding: '0.55rem 1rem', fontSize: '0.8rem', fontWeight: 700 }}>Course A — CPD Microcontrollers</div>
+              {[
+                { n: 1, title: 'Welcome video', active: false },
+                { n: 2, title: 'Lecture slides', active: false },
+                { n: 3, title: 'Connection points ★', active: true },
+                { n: 4, title: 'Digital inputs', active: false },
+              ].map(row => (
+                <div key={row.n} style={{ display: 'flex', gap: '0.6rem', padding: '0.45rem 1rem', borderBottom: '1px solid var(--border)', background: row.active ? 'var(--primary-50)' : undefined }}>
+                  <span style={{ color: 'var(--text-subtle)', fontSize: '0.75rem', width: '1.2em' }}>{row.n}</span>
+                  <span style={{ fontSize: '0.82rem', color: row.active ? 'var(--primary)' : 'var(--text-muted)', fontWeight: row.active ? 700 : 400 }}>{row.title}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Middle — the shared file */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-subtle)', textAlign: 'center', lineHeight: 1.3 }}>both point to</div>
+              <div style={{ background: 'var(--warn-bg)', border: '2px solid var(--warn-border)', borderRadius: 'var(--r-md)', padding: '0.6rem 0.8rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.3rem' }}>📄</div>
+                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--warn)', marginTop: '0.3rem', lineHeight: 1.3 }}>CP4807-3.docx</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-subtle)', marginTop: '0.2rem' }}>one file in Drive</div>
+              </div>
+            </div>
+
+            {/* Course B */}
+            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+              <div style={{ background: '#166534', color: '#fff', padding: '0.55rem 1rem', fontSize: '0.8rem', fontWeight: 700 }}>Course B — BTEC Unit 5</div>
+              {[
+                { n: 10, title: 'Flowcode intro', active: false },
+                { n: 11, title: 'Binary / hex', active: false },
+                { n: 12, title: 'Connection points ★', active: true },
+                { n: 13, title: 'Assessment task', active: false },
+              ].map(row => (
+                <div key={row.n} style={{ display: 'flex', gap: '0.6rem', padding: '0.45rem 1rem', borderBottom: '1px solid var(--border)', background: row.active ? '#f0fdf4' : undefined }}>
+                  <span style={{ color: 'var(--text-subtle)', fontSize: '0.75rem', width: '1.6em' }}>{row.n}</span>
+                  <span style={{ fontSize: '0.82rem', color: row.active ? '#166534' : 'var(--text-muted)', fontWeight: row.active ? 700 : 400 }}>{row.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            Screen 3 in Course A and screen 12 in Course B both show the same worksheet — the file is fetched from the same place in Drive. If you correct a mistake in the document, both courses show the fix automatically.
+          </p>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            This also means your existing worksheet library doesn&apos;t need to be reorganised. You can build a new course that mixes and matches files from different folders — a worksheet from the CP4807 folder, a video from YouTube, a PDF datasheet from the Matrix website — just by pointing the definition file at each one.
+          </p>
+          <Callout>
+            <strong>One file, many courses, zero duplication.</strong> The position number (screen 3, screen 12) is defined entirely by the definition file, not by the file itself. A file has no idea which course it&apos;s in or what position it appears at.
+          </Callout>
         </Section>
 
         {/* ── Part 2: Definition File ───────────────────────────── */}
