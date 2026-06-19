@@ -2,15 +2,17 @@ import { createClient } from '@/lib/supabase/server'
 import { CourseCard } from '@/components/CourseCard'
 import type { Course } from '@/types'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function CatalogPage() {
   const supabase = await createClient()
 
-  const { data: courses } = await supabase
+  const { data: courses, error } = await supabase
     .from('courses')
     .select('*, screens(count)')
     .order('created_at')
+
+  if (error) console.error('[catalog] supabase error:', error)
 
   // Flatten the count from the relation
   const enriched = (courses ?? []).map((c: Course & { screens: { count: number }[] }) => ({
