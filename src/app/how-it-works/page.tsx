@@ -214,54 +214,124 @@ export default function HowItWorksPage() {
 
           {/* Table mock-up */}
           <div style={{ overflowX: 'auto', marginBottom: '1.5rem' }}>
-            <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.85rem' }}>
+            <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '0.82rem' }}>
               <thead>
                 <tr style={{ background: 'var(--primary-dark)', color: '#fff' }}>
-                  {['Screen type','Hours','Equipment','Title','File / URL'].map(h => (
-                    <th key={h} style={{ padding: '0.55rem 0.8rem', textAlign: 'left', fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.5px' }}>{h}</th>
+                  {['Screen type','Hours','Equipment','Title','File / URL','Section'].map(h => (
+                    <th key={h} style={{ padding: '0.55rem 0.8rem', textAlign: 'left', fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {[
-                  ['HTML',   '0.1', 'E-blocks 3',  'Welcome',               'LMS Assets/CO0001/welcome.html'],
-                  ['Image',  '0',   'E-blocks 3',  'Course cover',          'LMS Assets/CO0001/cover.png'],
-                  ['YouTube','0.2', 'E-blocks 3',  'Introducing E-blocks',  'https://youtu.be/KmpyVmv6J_Y'],
-                  ['Powerpoint','0.3','E-blocks 3','Lecture slides',        'LMS Assets/CO0001/lecture1.pptx'],
-                  ['Document','1',  'E-blocks 3',  'Worksheet 1',           'LMS Assets/CP4807/CP4807-1.docx'],
-                  ['PDF',    '0.5', 'E-blocks 3',  'Reference sheet',       'https://matrixtsl.com/ref.pdf'],
-                  ['Document','1.5','E-blocks 3',  'Homework',              'LMS Assets/CP4807/CP4807-H1.docx'],
-                ].map((row, i) => (
-                  <tr key={i} style={{ background: i % 2 === 0 ? 'var(--surface)' : 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
-                    {row.map((cell, j) => (
-                      <td key={j} style={{ padding: '0.5rem 0.8rem', color: j === 0 ? 'var(--primary)' : 'var(--text)', fontWeight: j === 0 ? 700 : 400 }}>
-                        {j === 4 ? <span style={{ fontFamily: 'monospace', fontSize: '0.8em', color: 'var(--text-muted)' }}>{cell}</span> : cell}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                  ['HTML',        '0.1', 'E-blocks 3', 'Welcome',              'LMS Assets/CO0001/welcome.html',       ''],
+                  ['YouTube',     '0.2', 'E-blocks 3', 'Intro video',          'https://youtu.be/KmpyVmv6J_Y',         ''],
+                  ['Powerpoint',  '0.3', 'E-blocks 3', 'Lecture slides',       'LMS Assets/CO0001/lecture1.pptx',      ''],
+                  ['Document',    '1',   'Matrix kit',  'Worksheet 1 – Closed-Loop', 'LMS Assets/CP0539.docx',         'Worksheet 1 – Closed-Loop Control Systems'],
+                  ['Document',    '1',   'Matrix kit',  'Worksheet 2 – Emergency Stops', 'LMS Assets/CP0539.docx',     'Worksheet 2 – Emergency Stops'],
+                  ['Document',    '1',   'Matrix kit',  'Worksheet 3 – Status LED', 'LMS Assets/CP0539.docx',          'Worksheet 3 – Status LED'],
+                  ['PDF',         '0.5', 'Matrix kit',  'Reference sheet',      'https://matrixtsl.com/ref.pdf',        ''],
+                ].map((row, i) => {
+                  const isMasterDoc = row[4].includes('CP0539')
+                  return (
+                    <tr key={i} style={{ background: isMasterDoc ? '#fffbeb' : i % 2 === 0 ? 'var(--surface)' : 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
+                      {row.map((cell, j) => (
+                        <td key={j} style={{ padding: '0.45rem 0.8rem', color: j === 0 ? 'var(--primary)' : j === 5 && cell ? 'var(--warn)' : 'var(--text)', fontWeight: j === 0 ? 700 : j === 5 && cell ? 600 : 400, whiteSpace: j >= 4 ? 'nowrap' : undefined }}>
+                          {j >= 4 ? <span style={{ fontFamily: 'monospace', fontSize: '0.78em', color: j === 5 && cell ? 'var(--warn)' : 'var(--text-muted)' }}>{cell || '—'}</span> : cell}
+                        </td>
+                      ))}
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
+          <p style={{ fontSize: '0.78rem', color: 'var(--text-subtle)', marginBottom: '1.5rem', fontStyle: 'italic' }}>
+            Rows highlighted in yellow all point to the same file (CP0539.docx) — the Section column tells the app which part of that file to show.
+          </p>
 
           <h3 style={{ fontWeight: 700, color: 'var(--primary-dark)', fontSize: '1rem', margin: '1.5rem 0 0.75rem' }}>Column meanings</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1.5rem' }}>
             {[
               { col: 'Screen type', desc: 'What kind of content this row is. Must be one of: Image, HTML, YouTube, PDF, Powerpoint, Document.' },
-              { col: 'Hours', desc: 'Estimated time to complete this screen. Used to calculate total course hours and show progress estimates.' },
-              { col: 'Equipment', desc: 'Hardware or software required. Shown as a label on each screen (e.g. "Flowcode / E-blocks3").' },
-              { col: 'Title', desc: 'The screen title shown in the sidebar and header bar.' },
-              { col: 'File / URL', desc: 'Path to the file in cloud storage (relative to the root folder), or a full URL for YouTube links and external PDFs.' },
+              { col: 'Hours',       desc: 'Estimated time to complete this screen. Used to calculate total course hours and show progress estimates.' },
+              { col: 'Equipment',   desc: 'Hardware or software required. Shown as a label on each screen (e.g. "Matrix kit", "Flowcode / E-blocks3").' },
+              { col: 'Title',       desc: 'The screen title shown in the sidebar and header bar.' },
+              { col: 'File / URL',  desc: 'Path to the file in cloud storage (relative to the root folder), or a full URL for YouTube links and external PDFs.' },
+              { col: 'Section',     desc: 'For Word documents only: the exact Heading 2 text of the section to extract. Leave blank to show the whole document. See "Master document pattern" below.' },
             ].map(({ col, desc }) => (
-              <div key={col} style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '0.75rem', alignItems: 'start' }}>
-                <code style={{ background: 'var(--primary-50)', color: 'var(--primary-dark)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.82em', fontWeight: 700 }}>{col}</code>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>{desc}</span>
+              <div key={col} style={{ display: 'grid', gridTemplateColumns: '130px 1fr', gap: '0.75rem', alignItems: 'start' }}>
+                <code style={{ background: 'var(--primary-50)', color: 'var(--primary-dark)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.8em', fontWeight: 700 }}>{col}</code>
+                <span style={{ color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.5 }}>{desc}</span>
               </div>
             ))}
           </div>
 
+          {/* ── Master doc pattern ── */}
+          <h3 style={{ fontWeight: 700, color: 'var(--primary-dark)', fontSize: '1rem', margin: '1.75rem 0 0.75rem' }}>
+            The master document pattern
+          </h3>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            Matrix worksheets are often authored as a <strong>single Word file containing all the worksheets for a unit</strong> — one document, 12 or 15 worksheets inside, each starting with a Heading 2 in Word.
+          </p>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            For example, <code style={{ background: 'var(--primary-50)', padding: '0.1em 0.4em', borderRadius: 4, fontSize: '0.85em' }}>CP0539 - Industrial Maintenance.docx</code> is one file that contains all 15 worksheets for that unit, structured like this in Word:
+          </p>
+
+          {/* Word structure diagram */}
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden', marginBottom: '1.25rem' }}>
+            <div style={{ background: '#2d3748', color: '#e2e8f0', padding: '0.5rem 1rem', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px' }}>
+              CP0539 - Industrial Maintenance.docx — Word structure
+            </div>
+            <div style={{ padding: '0.75rem 1rem', fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 2 }}>
+              {[
+                { indent: 0, style: 'h1',    text: 'CP0539 Industrial Maintenance of Closed Loop Systems', color: '#1e1b4b' },
+                { indent: 1, style: 'h2',    text: 'Worksheet 1 – Closed-Loop Control Systems', color: 'var(--primary)' },
+                { indent: 2, style: 'body',  text: '...worksheet content, images, tasks...', color: 'var(--text-muted)' },
+                { indent: 1, style: 'h2',    text: 'Worksheet 2 – Emergency Stops', color: 'var(--primary)' },
+                { indent: 2, style: 'body',  text: '...worksheet content...', color: 'var(--text-muted)' },
+                { indent: 1, style: 'h2',    text: 'Worksheet 3 – Status LED', color: 'var(--primary)' },
+                { indent: 2, style: 'body',  text: '...worksheet content...', color: 'var(--text-muted)' },
+                { indent: 2, style: 'dots',  text: '  · · ·  (12 more worksheets)', color: 'var(--text-subtle)' },
+                { indent: 1, style: 'h2',    text: 'Worksheet 15 – Lock Out Tag Out', color: 'var(--primary)' },
+                { indent: 2, style: 'body',  text: '...worksheet content...', color: 'var(--text-muted)' },
+              ].map((item, i) => (
+                <div key={i} style={{ paddingLeft: item.indent * 1.5 + 'rem', color: item.color, fontWeight: item.style === 'h2' ? 700 : item.style === 'h1' ? 800 : 400, fontStyle: item.style === 'body' || item.style === 'dots' ? 'italic' : undefined, fontSize: item.style === 'h1' ? '0.85em' : item.style === 'h2' ? '0.88em' : '0.78em' }}>
+                  {item.style === 'h1' && '# '}{item.style === 'h2' && '## '}{item.text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1rem' }}>
+            In the definition file, you put the same file path in 15 rows and fill in the <strong>Section</strong> column with the exact Heading 2 text for each one. When a learner opens screen 3, the app fetches the full CP0539.docx from Drive, surgically extracts just the &ldquo;Worksheet 3 – Status LED&rdquo; section (everything from that heading to the next heading), and renders only that — the learner never sees any other worksheet.
+          </p>
+
+          {/* Section extraction diagram */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 36px 1fr', gap: '0', alignItems: 'center', marginBottom: '1.5rem' }}>
+            {/* Left: full doc */}
+            <div style={{ border: '2px solid var(--border)', borderRadius: 'var(--r-md)', overflow: 'hidden' }}>
+              <div style={{ background: 'var(--text)', color: '#fff', padding: '0.4rem 0.8rem', fontSize: '0.72rem', fontWeight: 700 }}>CP0539.docx (full file in Drive)</div>
+              {['Worksheet 1 – Closed-Loop Control Systems', 'Worksheet 2 – Emergency Stops', 'Worksheet 3 – Status LED ← extracted', 'Worksheet 4 – PLC', '· · · 11 more'].map((w, i) => (
+                <div key={i} style={{ padding: '0.35rem 0.8rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', background: w.includes('extracted') ? '#fffbeb' : undefined, color: w.includes('extracted') ? 'var(--warn)' : w.startsWith('·') ? 'var(--text-subtle)' : 'var(--text-muted)', fontWeight: w.includes('extracted') ? 700 : 400, fontStyle: w.startsWith('·') ? 'italic' : undefined }}>
+                  {w}
+                </div>
+              ))}
+            </div>
+            {/* Arrow */}
+            <div style={{ textAlign: 'center', fontSize: '1.25rem', color: 'var(--primary)' }}>→</div>
+            {/* Right: extracted section */}
+            <div style={{ border: '2px solid var(--warn-border)', borderRadius: 'var(--r-md)', overflow: 'hidden', background: 'var(--warn-bg)' }}>
+              <div style={{ background: 'var(--warn)', color: '#fff', padding: '0.4rem 0.8rem', fontSize: '0.72rem', fontWeight: 700 }}>What the learner sees</div>
+              <div style={{ padding: '0.6rem 0.8rem' }}>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--warn)', marginBottom: '0.35rem' }}>Worksheet 3 – Status LED</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic', lineHeight: 1.5 }}>...only the content between<br />this heading and the next...</div>
+              </div>
+            </div>
+          </div>
+
           <Callout>
-            <strong>Tip:</strong> The &quot;File&quot; column can be a relative path within your cloud folder (e.g. <code>LMS Assets/CP4807/CP4807-1.docx</code>) or a full URL. YouTube links and external PDFs go in as full URLs and are never uploaded to Drive.
+            <strong>One master doc, 15 screens, one file in Drive.</strong> To update worksheet 3, edit the single CP0539.docx in Drive. Every course that uses that section automatically shows the update — no re-uploading, no splitting, no re-importing.
           </Callout>
         </Section>
 
