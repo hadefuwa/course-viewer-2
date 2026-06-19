@@ -14,63 +14,74 @@ export default async function CatalogPage() {
 
   if (error) console.error('[catalog] supabase error:', error)
 
-  // Flatten the count from the relation
   const enriched = (courses ?? []).map((c: Course & { screens: { count: number }[] }) => ({
     ...c,
     screen_count: c.screens?.[0]?.count ?? 0,
   }))
 
-  // Collect unique categories for filter pills
   const allCategories = [...new Set(enriched.flatMap(c => c.categories))].sort()
+  const totalHours = enriched.reduce((sum, c) => sum + (c.screen_count ?? 0), 0)
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-violet-600">Matrix TSL</span>
-            <h1 className="text-2xl font-bold text-slate-900 mt-0.5">Course Library</h1>
-          </div>
-          <div className="text-sm text-slate-400">
-            {enriched.length} course{enriched.length !== 1 ? 's' : ''}
+    <>
+      {/* Hero */}
+      <section className="catalog-hero">
+        <div className="hero-inner">
+          <span className="eyebrow">Matrix TSL</span>
+          <h1>Engineering Course Library</h1>
+          <p>Professional development courses for electronic and electrical engineering technicians.</p>
+
+          <div className="hero-stats">
+            <div className="stat">
+              <span className="stat-num">{enriched.length}</span>
+              <span className="stat-label">Courses</span>
+            </div>
+            <div className="stat">
+              <span className="stat-num">{totalHours}</span>
+              <span className="stat-label">Screens</span>
+            </div>
+            <div className="stat">
+              <span className="stat-num">{allCategories.length || '—'}</span>
+              <span className="stat-label">Categories</span>
+            </div>
           </div>
         </div>
-      </header>
+      </section>
 
-      <main className="max-w-7xl mx-auto px-6 py-10">
-        {/* Category filter pills */}
+      {/* Catalog */}
+      <div className="catalog-section">
         {allCategories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="catalog-filter">
+            <button className="catalog-filter-pill active">All</button>
             {allCategories.map(cat => (
-              <span
-                key={cat}
-                className="text-sm bg-white border border-slate-200 text-slate-600 px-3 py-1.5 rounded-full cursor-default"
-              >
+              <button key={cat} className="catalog-filter-pill">
                 {cat}
-              </span>
+                <span className="pill-count">{enriched.filter(c => c.categories.includes(cat)).length}</span>
+              </button>
             ))}
           </div>
         )}
 
-        {/* Course grid */}
+        <div className="catalog-heading">
+          <h2>{enriched.length} course{enriched.length !== 1 ? 's' : ''}</h2>
+        </div>
+
         {enriched.length === 0 ? (
-          <div className="text-center py-24">
-            <p className="text-5xl mb-4">📚</p>
-            <h2 className="text-xl font-semibold text-slate-700 mb-2">No courses yet</h2>
-            <p className="text-slate-500 text-sm">
-              Import courses from the{' '}
-              <a href="/admin" className="text-violet-600 hover:underline">admin panel</a>.
+          <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
+            <p style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</p>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.5rem' }}>No courses yet</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+              Import courses from the <a href="/admin">admin panel</a>.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="catalog">
             {enriched.map(course => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </>
   )
 }

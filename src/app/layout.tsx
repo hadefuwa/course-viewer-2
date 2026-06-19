@@ -1,8 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
 import './globals.css'
-
-const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
 
 export const metadata: Metadata = {
   title: 'Matrix TSL Course Viewer',
@@ -11,8 +8,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geist.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+    <html lang="en">
+      <body>
+        <header className="site-header">
+          <a href="/" className="brand">
+            <span className="brand-name">Matrix TSL</span>
+            <span className="brand-sub">Course Viewer</span>
+          </a>
+          <nav>
+            <a href="/">Library</a>
+          </nav>
+        </header>
+        {children}
+      </body>
     </html>
   )
 }

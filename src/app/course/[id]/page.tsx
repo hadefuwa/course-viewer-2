@@ -23,85 +23,97 @@ export default async function CoursePage({ params }: { params: Promise<{ id: str
   const firstScreen = screenList[0]
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <header className="bg-white border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-6 py-5">
-          <Link href="/" className="text-sm text-slate-400 hover:text-slate-600 transition-colors">
-            ← Course Library
-          </Link>
-        </div>
-      </header>
+    <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
+      <main style={{ maxWidth: 900, margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}>
+        {/* Back */}
+        <Link href="/" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 600 }}>
+          ← Course Library
+        </Link>
 
-      <main className="max-w-5xl mx-auto px-6 py-10">
-        {/* Hero */}
-        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden mb-8">
-          <div className="h-2 bg-gradient-to-r from-violet-600 to-violet-400" />
-          <div className="p-8">
-            <div className="flex items-start justify-between gap-4 flex-wrap">
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-violet-600 mb-2 block">
-                  {course.kind === 'course' ? 'CPD Course' : 'Curriculum Pack'} · {course.id}
-                </span>
-                <h1 className="text-3xl font-bold text-slate-900 mb-3">{course.title}</h1>
-                {course.description && (
-                  <p className="text-slate-500 max-w-2xl leading-relaxed">{course.description}</p>
-                )}
-              </div>
-              {course.certificate_enabled && (
-                <div className="text-center bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 shrink-0">
-                  <div className="text-2xl mb-1">🏆</div>
-                  <p className="text-xs font-semibold text-amber-700">Certificate<br/>on completion</p>
-                </div>
-              )}
+        {/* Hero card */}
+        <div style={{
+          background: 'var(--surface)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--r-lg)',
+          overflow: 'hidden',
+          margin: '1.5rem 0 2rem',
+          boxShadow: 'var(--shadow-sm)',
+        }}>
+          {/* Thumbnail gradient */}
+          <div style={{
+            height: 140,
+            background: 'linear-gradient(135deg, var(--primary-darker) 0%, var(--primary) 100%)',
+          }} />
+
+          <div style={{ padding: '2rem 2.5rem 2.5rem' }}>
+            <div style={{ fontSize: '0.7rem', letterSpacing: '1.8px', textTransform: 'uppercase', color: 'var(--text-subtle)', fontWeight: 700, marginBottom: '0.5rem' }}>
+              {course.kind === 'course' ? 'CPD Course' : 'Curriculum Pack'} · {course.id}
             </div>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 800, color: 'var(--primary-dark)', margin: '0 0 0.7rem', letterSpacing: '-0.01em' }}>
+              {course.title}
+            </h1>
+            {course.description && (
+              <p style={{ color: 'var(--text-muted)', maxWidth: '60ch', lineHeight: 1.6, margin: '0 0 1.5rem' }}>
+                {course.description}
+              </p>
+            )}
 
             {/* Stats */}
-            <div className="flex items-center gap-6 mt-6 pt-6 border-t border-slate-100 text-sm text-slate-500">
-              <span><strong className="text-slate-800">{screenList.length}</strong> screens</span>
-              <span><strong className="text-slate-800">{formatHours(totalHours)}</strong> estimated</span>
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.5rem', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+              <span><strong style={{ color: 'var(--text)', fontWeight: 700 }}>{screenList.length}</strong> screens</span>
+              {totalHours > 0 && <span><strong style={{ color: 'var(--text)', fontWeight: 700 }}>{formatHours(totalHours)}</strong> estimated</span>}
+              {course.certificate_enabled && <span>🏆 Certificate on completion</span>}
               {course.categories.map((c: string) => (
-                <span key={c} className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">{c}</span>
+                <span key={c} className="card-cat" style={{ display: 'inline-block' }}>{c}</span>
               ))}
             </div>
 
-            {/* CTA */}
             {firstScreen && (
-              <div className="mt-6">
-                <Link
-                  href={`/course/${id}/screen/${firstScreen.id}`}
-                  className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors"
-                >
-                  Start course →
-                </Link>
-              </div>
+              <Link href={`/course/${id}/screen/${firstScreen.id}`} className="btn btn-primary" style={{ fontSize: '1rem', padding: '0.8rem 1.75rem' }}>
+                Start course <span className="btn-arrow">→</span>
+              </Link>
             )}
           </div>
         </div>
 
         {/* Screen list */}
-        <h2 className="text-lg font-bold text-slate-800 mb-4">Contents</h2>
-        <div className="bg-white rounded-2xl border border-slate-200 divide-y divide-slate-100">
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 800, color: 'var(--text)', margin: '0 0 1rem', letterSpacing: '-0.01em' }}>
+          Contents
+        </h2>
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
           {screenList.map((screen, i) => (
             <Link
               key={screen.id}
               href={`/course/${id}/screen/${screen.id}`}
-              className="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 transition-colors group"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '0.85rem 1.5rem',
+                borderBottom: i < screenList.length - 1 ? '1px solid var(--border)' : 'none',
+                textDecoration: 'none',
+                color: 'inherit',
+                transition: 'background 120ms ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--primary-50)')}
+              onMouseLeave={e => (e.currentTarget.style.background = '')}
             >
-              <span className="text-sm font-mono text-slate-400 w-6 shrink-0">{i + 1}</span>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-800 group-hover:text-violet-700 truncate">
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', width: '1.8em', textAlign: 'right', flexShrink: 0 }}>
+                {i + 1}
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ margin: 0, fontWeight: 600, color: 'var(--primary-dark)', fontSize: '0.92rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {screen.title}
                 </p>
                 {screen.section_heading && (
-                  <p className="text-xs text-slate-400 truncate">{screen.section_heading}</p>
+                  <p style={{ margin: '0.1rem 0 0', fontSize: '0.78rem', color: 'var(--text-subtle)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {screen.section_heading}
+                  </p>
                 )}
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs text-slate-400 capitalize">{screen.type}</span>
-                {screen.hours > 0 && (
-                  <span className="text-xs text-slate-400">{formatHours(screen.hours)}</span>
-                )}
+              <div style={{ flexShrink: 0, display: 'flex', gap: '0.75rem', alignItems: 'center', fontSize: '0.76rem', color: 'var(--text-subtle)' }}>
+                <span style={{ textTransform: 'capitalize' }}>{screen.type}</span>
+                {screen.hours > 0 && <span>{formatHours(screen.hours)}</span>}
               </div>
             </Link>
           ))}

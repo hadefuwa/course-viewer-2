@@ -3,15 +3,24 @@ import { youtubeId } from '@/lib/utils'
 
 export function YouTubeViewer({ src }: { src: string }) {
   const id = youtubeId(src)
-  if (!id) return <p className="text-red-500">Invalid YouTube URL</p>
+  if (!id) return (
+    <div className="stage-missing">
+      <div className="stage-missing-inner">
+        <div className="icon">⚠️</div>
+        <h3>Invalid YouTube URL</h3>
+        <p>{src}</p>
+      </div>
+    </div>
+  )
   return (
-    <div className="w-full aspect-video">
-      <iframe
-        src={`https://www.youtube.com/embed/${id}`}
-        className="w-full h-full rounded-lg"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-      />
+    <div className="stage-youtube">
+      <div className="stage-youtube-frame">
+        <iframe
+          src={`https://www.youtube.com/embed/${id}`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
     </div>
   )
 }

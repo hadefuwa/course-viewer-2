@@ -36,10 +36,10 @@ export function DocumentViewer({ contentUrl }: { contentUrl: string }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 gap-3 text-slate-500">
-        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      <div className="stage-loading">
+        <svg className="animate-spin" style={{ width: 20, height: 20 }} viewBox="0 0 24 24" fill="none">
+          <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+          <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
         </svg>
         Loading document…
       </div>
@@ -48,16 +48,22 @@ export function DocumentViewer({ contentUrl }: { contentUrl: string }) {
 
   if (error) {
     return (
-      <div className="p-6 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-        Could not load document: {error}
+      <div className="stage-missing">
+        <div className="stage-missing-inner">
+          <div className="icon">⚠️</div>
+          <h3>Could not load document</h3>
+          <p>{error}</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div
-      className="doc-content"
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <div className="stage-doc">
+      <div
+        className="stage-doc-inner"
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    </div>
   )
 }
