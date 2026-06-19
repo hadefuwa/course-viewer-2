@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "upload:curriculum": "node tools/upload-curriculum.mjs",
+    "seed:supabase": "node tools/seed-supabase.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
