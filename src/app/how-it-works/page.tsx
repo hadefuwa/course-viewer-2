@@ -72,8 +72,72 @@ export default function HowItWorksPage() {
             <FileTypeCard emoji="▶️" label="YouTube" desc="Just a link — no upload needed" />
             <FileTypeCard emoji="🌐" label="HTML" desc="Custom intro / equipment pages" />
           </Grid>
+          <h3 style={{ fontWeight: 700, color: 'var(--primary-dark)', fontSize: '1rem', margin: '1.5rem 0 0.75rem' }}>
+            What &ldquo;no conversion needed&rdquo; actually means
+          </h3>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+            The traditional approach to putting documents online is to convert them first — run a Word doc through a tool, save the output as HTML, upload that HTML, then serve it. If the original changes, you have to convert and upload again. It&apos;s a manual step that&apos;s easy to forget.
+          </p>
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '1.5rem' }}>
+            This app skips that entirely. The <strong>.docx stays a .docx</strong> in Google Drive. The conversion happens automatically, on the fly, inside the learner&apos;s browser the moment they open the screen. Here&apos;s exactly what happens for each file type:
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.5rem' }}>
+            <OnDemandRow
+              emoji="📄"
+              type="Word document (.docx)"
+              steps={[
+                'Learner clicks the screen in the sidebar',
+                'The server fetches the raw .docx file bytes from Google Drive',
+                'Those bytes are passed to mammoth.js — a library running inside the browser',
+                'mammoth reads the Word XML and converts it to clean HTML (text, headings, tables, images — all preserved)',
+                'The HTML is injected into the page and styled with the site\'s fonts and colours',
+                'The result is cached so Drive isn\'t hit again on the next visit',
+              ]}
+              note="The .docx file itself is never touched. Update it in Drive, clear the cache, done."
+            />
+            <OnDemandRow
+              emoji="📕"
+              type="PDF"
+              steps={[
+                'The PDF URL is dropped into an <iframe> element',
+                'The browser\'s built-in PDF renderer opens it — the same viewer you get when you open a PDF in Chrome or Edge',
+                'No plugins, no third-party service, no conversion at all',
+              ]}
+              note="PDFs are displayed exactly as authored, including any custom fonts and layouts."
+            />
+            <OnDemandRow
+              emoji="▶️"
+              type="YouTube video"
+              steps={[
+                'The YouTube URL in the definition file is parsed to extract the video ID (the part after v= or youtu.be/)',
+                'An embedded player iframe is created pointing to youtube.com/embed/VIDEO_ID',
+                'YouTube streams the video directly to the learner',
+              ]}
+              note="The video file never touches our servers at all. YouTube handles all the bandwidth."
+            />
+            <OnDemandRow
+              emoji="🖼️"
+              type="Image (PNG / JPG / SVG)"
+              steps={[
+                'The image URL is put into an <img> tag',
+                'The browser downloads and displays it — no processing involved',
+              ]}
+              note="SVGs scale perfectly to any screen size. PNGs and JPGs are shown at their natural resolution."
+            />
+            <OnDemandRow
+              emoji="📊"
+              type="PowerPoint (.pptx)"
+              steps={[
+                'Shown as a download card — the learner clicks to download the file',
+                'They open it locally in PowerPoint, LibreOffice, or Google Slides',
+              ]}
+              note="In-browser PowerPoint rendering is being explored for a future version."
+            />
+          </div>
+
           <Callout>
-            <strong>No conversion or pre-processing needed.</strong> Upload the file as-is. The viewer fetches it on demand and converts it to HTML in the browser (for Word docs via mammoth.js) or displays it natively (PDFs, images, YouTube).
+            <strong>Why this matters for updating content:</strong> if you fix a typo in a Word doc or swap a slide in a PowerPoint, just replace the file in Google Drive. The next learner to open that screen gets the updated version. There is no separate &ldquo;republish&rdquo; step and no HTML file to regenerate.
           </Callout>
         </Section>
 
@@ -382,6 +446,30 @@ function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc:
       <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{icon}</div>
       <strong style={{ display: 'block', fontSize: '0.9rem', color: 'var(--primary-dark)', marginBottom: '0.3rem', fontWeight: 700 }}>{title}</strong>
       <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{desc}</span>
+    </div>
+  )
+}
+
+function OnDemandRow({ emoji, type, steps, note }: { emoji: string; type: string; steps: string[]; note: string }) {
+  return (
+    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.7rem 1rem', background: 'var(--primary-50)', borderBottom: '1px solid var(--border)' }}>
+        <span style={{ fontSize: '1.2rem' }}>{emoji}</span>
+        <strong style={{ color: 'var(--primary-dark)', fontSize: '0.9rem', fontWeight: 700 }}>{type}</strong>
+      </div>
+      {/* Steps */}
+      <div style={{ padding: '0.9rem 1rem 0.75rem' }}>
+        <ol style={{ margin: 0, padding: '0 0 0 1.2rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+          {steps.map((s, i) => (
+            <li key={i} style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.55 }}>{s}</li>
+          ))}
+        </ol>
+        {/* Note */}
+        <p style={{ margin: '0.75rem 0 0', fontSize: '0.8rem', color: 'var(--text-subtle)', fontStyle: 'italic', lineHeight: 1.5, paddingTop: '0.6rem', borderTop: '1px dashed var(--border)' }}>
+          {note}
+        </p>
+      </div>
     </div>
   )
 }
